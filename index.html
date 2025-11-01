@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter - Inscription</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Restez Informé</h1>
+            <p class="subtitle">Inscrivez-vous à notre newsletter pour recevoir les dernières actualités</p>
+
+            <form id="newsletter-form" class="newsletter-form">
+                <div class="form-group">
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Entrez votre adresse email"
+                        required
+                        autocomplete="email"
+                    >
+                    <button type="submit" class="subscribe-btn">
+                        S'inscrire à la Newsletter
+                    </button>
+                </div>
+            </form>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
