@@ -1,0 +1,252 @@
+{
+  "name": "Crypto & Politique News Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-8am",
+      "name": "Schedule - 8h du matin",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://cointelegraph.com/rss",
+        "options": {}
+      },
+      "id": "rss-crypto",
+      "name": "RSS Feed - Crypto (Cointelegraph)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        460,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+        "options": {}
+      },
+      "id": "rss-crypto-2",
+      "name": "RSS Feed - Crypto (CoinDesk)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.bloomberg.com/politics/news.rss",
+        "options": {}
+      },
+      "id": "rss-politique",
+      "name": "RSS Feed - Politique (Bloomberg)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        460,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "merge-feeds",
+      "name": "Fusionner tous les feeds",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "limit-items",
+      "name": "Limiter à 10 news récentes",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Agréger et résumer les news\nconst items = $input.all();\n\nlet cryptoNews = [];\nlet politiqueNews = [];\n\n// Séparer les news par catégorie\nfor (const item of items) {\n  const title = item.json.title || '';\n  const link = item.json.link || '';\n  const pubDate = item.json.pubDate || '';\n  \n  // Détection crypto (Bitcoin, BTC, crypto)\n  if (title.toLowerCase().includes('bitcoin') || \n      title.toLowerCase().includes('btc') || \n      title.toLowerCase().includes('crypto')) {\n    cryptoNews.push({ title, link, pubDate });\n  }\n  \n  // Détection politique (government, regulation, fed, policy, ban, law)\n  if (title.toLowerCase().includes('government') || \n      title.toLowerCase().includes('regulation') ||\n      title.toLowerCase().includes('fed') ||\n      title.toLowerCase().includes('policy') ||\n      title.toLowerCase().includes('ban') ||\n      title.toLowerCase().includes('law') ||\n      title.toLowerCase().includes('president') ||\n      title.toLowerCase().includes('congress')) {\n    politiqueNews.push({ title, link, pubDate });\n  }\n}\n\n// Créer le résumé\nlet message = '📰 *RÉSUMÉ NEWS DU JOUR* 📰\\n\\n';\n\n// Section Crypto\nif (cryptoNews.length > 0) {\n  message += '🪙 *CRYPTO / BITCOIN*\\n\\n';\n  cryptoNews.slice(0, 5).forEach((news, index) => {\n    message += `${index + 1}. ${news.title}\\n${news.link}\\n\\n`;\n  });\n}\n\n// Section Politique\nif (politiqueNews.length > 0) {\n  message += '\\n🏛️ *POLITIQUE & RÉGULATION*\\n\\n';\n  politiqueNews.slice(0, 5).forEach((news, index) => {\n    message += `${index + 1}. ${news.title}\\n${news.link}\\n\\n`;\n  });\n}\n\nif (cryptoNews.length === 0 && politiqueNews.length === 0) {\n  message += '❌ Aucune news pertinente trouvée aujourd\\'hui.';\n}\n\nreturn [{ json: { message, cryptoCount: cryptoNews.length, politiqueCount: politiqueNews.length } }];"
+      },
+      "id": "aggregate-news",
+      "name": "Agréger & Résumer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/crypto-news-alerts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Title",
+              "value": "📊 Alertes Crypto & Politique"
+            },
+            {
+              "name": "Priority",
+              "value": "high"
+            },
+            {
+              "name": "Tags",
+              "value": "chart_with_upwards_trend,newspaper"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        },
+        "sendQuery": false,
+        "queryParameters": {
+          "parameters": []
+        }
+      },
+      "id": "send-ntfy",
+      "name": "Envoyer notification NTFY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule - 8h du matin": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed - Crypto (Cointelegraph)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Feed - Crypto (CoinDesk)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Feed - Politique (Bloomberg)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed - Crypto (Cointelegraph)": {
+      "main": [
+        [
+          {
+            "node": "Fusionner tous les feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed - Crypto (CoinDesk)": {
+      "main": [
+        [
+          {
+            "node": "Fusionner tous les feeds",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS Feed - Politique (Bloomberg)": {
+      "main": [
+        [
+          {
+            "node": "Fusionner tous les feeds",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Fusionner tous les feeds": {
+      "main": [
+        [
+          {
+            "node": "Limiter à 10 news récentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limiter à 10 news récentes": {
+      "main": [
+        [
+          {
+            "node": "Agréger & Résumer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agréger & Résumer": {
+      "main": [
+        [
+          {
+            "node": "Envoyer notification NTFY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-17T04:28:00.000Z",
+  "versionId": "1"
+}
