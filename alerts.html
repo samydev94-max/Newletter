@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertes Crypto & Politique - 1 Clic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .feature:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .main-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .main-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .main-btn:active {
+            transform: translateY(0);
+        }
+
+        .secondary-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .secondary-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .step {
+            background: #e8f4fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .step-number {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .icon {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📊</div>
+        <div class="badge">✨ 100% GRATUIT</div>
+        <h1>Alertes Crypto & Politique</h1>
+        <p class="subtitle">Reçois les news importantes chaque matin à 8h</p>
+
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">🪙</span>
+                <span>News Bitcoin & Crypto filtrées</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🏛️</span>
+                <span>Actualités politiques impactant les marchés</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">⏰</span>
+                <span>Résumé quotidien à 8h00</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🔒</span>
+                <span>Aucune inscription requise</span>
+            </div>
+        </div>
+
+        <button class="main-btn" onclick="openNTFY()">
+            📱 S'ABONNER AUX ALERTES
+        </button>
+
+        <button class="secondary-btn" onclick="window.open('https://play.google.com/store/apps/details?id=io.heckel.ntfy', '_blank')">
+            📥 Android - Télécharger NTFY
+        </button>
+
+        <button class="secondary-btn" onclick="window.open('https://apps.apple.com/app/ntfy/id1625396347', '_blank')">
+            📥 iOS - Télécharger NTFY
+        </button>
+
+        <div class="info">
+            <div class="info-title">📖 Comment ça marche ?</div>
+
+            <div class="step">
+                <span class="step-number">1.</span> Télécharge l'app NTFY (bouton ci-dessus)
+            </div>
+
+            <div class="step">
+                <span class="step-number">2.</span> Clique sur "S'ABONNER AUX ALERTES"
+            </div>
+
+            <div class="step">
+                <span class="step-number">3.</span> L'app NTFY s'ouvre automatiquement
+            </div>
+
+            <div class="step">
+                <span class="step-number">4.</span> Confirme l'abonnement
+            </div>
+
+            <div style="margin-top: 20px;">
+                <div class="info-text">
+                    <strong>✅ C'est tout !</strong><br>
+                    Tu recevras automatiquement les alertes chaque matin.<br>
+                    Pas besoin de compte, pas de clé API, 100% gratuit.
+                </div>
+            </div>
+        </div>
+
+        <div class="info" style="margin-top: 20px; padding-top: 20px;">
+            <div class="info-text">
+                🔧 <strong>Abonnement manuel :</strong><br>
+                Ouvre NTFY → Clique sur "+" → Entre le topic :<br>
+                <code style="background: #f0f0f0; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 5px;">crypto-news-samy-2024</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openNTFY() {
+            // Ouvre directement NTFY avec le topic
+            const ntfyUrl = 'ntfy://ntfy.sh/crypto-news-samy-2024';
+            const webUrl = 'https://ntfy.sh/crypto-news-samy-2024';
+
+            // Essaie d'ouvrir l'app, sinon ouvre la version web
+            window.location.href = ntfyUrl;
+
+            // Fallback vers la version web après 2 secondes si l'app ne s'ouvre pas
+            setTimeout(() => {
+                const confirmation = confirm(
+                    "L'app NTFY ne s'est pas ouverte ?\n\n" +
+                    "Clique OK pour télécharger l'app d'abord, ou Annuler pour voir la version web."
+                );
+
+                if (confirmation) {
+                    // Détecte iOS ou Android
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    const isAndroid = /Android/.test(navigator.userAgent);
+
+                    if (isIOS) {
+                        window.open('https://apps.apple.com/app/ntfy/id1625396347', '_blank');
+                    } else if (isAndroid) {
+                        window.open('https://play.google.com/store/apps/details?id=io.heckel.ntfy', '_blank');
+                    } else {
+                        window.open(webUrl, '_blank');
+                    }
+                } else {
+                    window.open(webUrl, '_blank');
+                }
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

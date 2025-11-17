@@ -1,8 +1,66 @@
 # Newsletter & Crypto News Alerts
 
 Ce repository contient :
-1. 📰 **Landing page Newsletter** - Une page d'inscription simple et élégante
-2. 🚀 **Workflows n8n** - Alertes automatiques crypto & politique
+1. 📱 **Alertes 1-Clic** - Solution ultra-simple avec GitHub Actions (RECOMMANDÉ)
+2. 📰 **Landing page Newsletter** - Page d'inscription newsletter
+3. 🚀 **Workflows n8n** - Alertes automatiques crypto & politique (pour utilisateurs avancés)
+
+---
+
+## 📱 Alertes Crypto & Politique - SOLUTION 1-CLIC (RECOMMANDÉ)
+
+### ⚡ Pour mobile : Juste un bouton !
+
+**👉 [OUVRIR LA PAGE D'ABONNEMENT](alerts.html)**
+
+ou visite : `https://samydev94-max.github.io/Newletter/alerts.html`
+
+### Comment ça marche ?
+
+1. Télécharge l'app NTFY (gratuite)
+2. Clique sur le bouton "S'ABONNER AUX ALERTES"
+3. C'EST TOUT ! ✅
+
+Tu recevras automatiquement :
+- 🪙 Top 5 news Bitcoin/Crypto
+- 🏛️ Top 5 news politique impactant les marchés
+- ⏰ Chaque matin à 8h00
+- 🔒 Aucune inscription requise
+- 💯 100% gratuit
+
+### Comment ça fonctionne techniquement ?
+
+- **GitHub Actions** (gratuit, inclus) tourne automatiquement dans le cloud
+- Récupère les flux RSS chaque matin à 8h
+- Filtre les news pertinentes
+- Envoie les notifications via NTFY
+- **Rien à installer, rien à héberger !**
+
+### Fichiers
+
+- `alerts.html` - Page d'abonnement avec bouton 1-clic
+- `.github/workflows/crypto-news-alerts.yml` - Workflow GitHub Actions
+
+### Activer GitHub Actions
+
+Pour que les alertes fonctionnent automatiquement :
+
+1. Va sur ton dépôt GitHub
+2. **Settings** → **Actions** → **General**
+3. Sous "Workflow permissions", sélectionne **"Read and write permissions"**
+4. Clique **Save**
+5. Va dans l'onglet **Actions**
+6. Active les workflows
+
+**C'est prêt !** Les alertes partiront automatiquement chaque jour à 8h.
+
+### Tester manuellement
+
+Pour tester sans attendre 8h :
+1. Va dans l'onglet **Actions** de ton repo
+2. Clique sur "Crypto & Politique News Alerts"
+3. Clique **"Run workflow"**
+4. Vérifie ta notification NTFY !
 
 ---
 

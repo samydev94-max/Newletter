@@ -1,0 +1,123 @@
+name: Crypto & Politique News Alerts
+
+on:
+  schedule:
+    # Tous les jours à 8h (heure de Paris/UTC+1, donc 7h UTC)
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Permet de lancer manuellement pour tester
+
+jobs:
+  send-news-alerts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install -g rss-parser node-fetch
+
+      - name: Fetch and send news
+        run: |
+          node << 'EOF'
+          const Parser = require('rss-parser');
+          const parser = new Parser();
+
+          async function fetchNews() {
+            try {
+              const feeds = [
+                { url: 'https://cointelegraph.com/rss', type: 'crypto' },
+                { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', type: 'crypto' },
+                { url: 'https://feeds.bloomberg.com/politics/news.rss', type: 'politique' }
+              ];
+
+              let cryptoNews = [];
+              let politiqueNews = [];
+
+              // Récupérer les flux RSS
+              for (const feed of feeds) {
+                try {
+                  const result = await parser.parseURL(feed.url);
+
+                  for (const item of result.items.slice(0, 10)) {
+                    const title = item.title || '';
+                    const link = item.link || '';
+
+                    // Filtrer crypto/bitcoin
+                    if (title.toLowerCase().includes('bitcoin') ||
+                        title.toLowerCase().includes('btc') ||
+                        title.toLowerCase().includes('crypto')) {
+                      cryptoNews.push({ title, link });
+                    }
+
+                    // Filtrer politique
+                    if (title.toLowerCase().includes('government') ||
+                        title.toLowerCase().includes('regulation') ||
+                        title.toLowerCase().includes('fed') ||
+                        title.toLowerCase().includes('policy') ||
+                        title.toLowerCase().includes('ban') ||
+                        title.toLowerCase().includes('law') ||
+                        title.toLowerCase().includes('president') ||
+                        title.toLowerCase().includes('congress')) {
+                      politiqueNews.push({ title, link });
+                    }
+                  }
+                } catch (err) {
+                  console.log(`Erreur pour ${feed.url}:`, err.message);
+                }
+              }
+
+              // Créer le message
+              let message = '📰 RÉSUMÉ NEWS DU JOUR\n\n';
+
+              if (cryptoNews.length > 0) {
+                message += '🪙 CRYPTO / BITCOIN\n\n';
+                cryptoNews.slice(0, 5).forEach((news, i) => {
+                  message += `${i + 1}. ${news.title}\n${news.link}\n\n`;
+                });
+              }
+
+              if (politiqueNews.length > 0) {
+                message += '🏛️ POLITIQUE & RÉGULATION\n\n';
+                politiqueNews.slice(0, 5).forEach((news, i) => {
+                  message += `${i + 1}. ${news.title}\n${news.link}\n\n`;
+                });
+              }
+
+              if (cryptoNews.length === 0 && politiqueNews.length === 0) {
+                message += '❌ Aucune news pertinente aujourd\'hui.';
+              }
+
+              // Envoyer via NTFY
+              const fetch = (await import('node-fetch')).default;
+              const response = await fetch('https://ntfy.sh/crypto-news-samy-2024', {
+                method: 'POST',
+                body: message,
+                headers: {
+                  'Title': '📊 Alertes Crypto & Politique',
+                  'Priority': 'high',
+                  'Tags': 'chart_with_upwards_trend,newspaper'
+                }
+              });
+
+              if (response.ok) {
+                console.log('✅ Notification envoyée avec succès !');
+                console.log(`📊 ${cryptoNews.length} news crypto, ${politiqueNews.length} news politique`);
+              } else {
+                console.log('❌ Erreur lors de l\'envoi:', await response.text());
+              }
+
+            } catch (error) {
+              console.error('❌ Erreur:', error);
+              process.exit(1);
+            }
+          }
+
+          fetchNews();
+          EOF
